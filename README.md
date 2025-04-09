@@ -24,7 +24,8 @@ npm install
 3. Create a .env file
 
 DATABASE_URL=your_postgres_connection_string
-JWT_SECRET=your_jwt_secret
+JWT_ACCESS_SECRET = your_jwt_secret
+JWT_REFRESH_SECRET = your_jwt_secret
 
 4. Run Prisma
 
