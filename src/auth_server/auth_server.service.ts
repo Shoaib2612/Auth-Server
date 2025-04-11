@@ -7,7 +7,12 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable() export class AuthService {
     constructor(private readonly prisma: DatabaseService, private readonly jwtService: JwtService,) { }
     async signup(dto: AuthDto) {
-        const userExists = await this.prisma.user.findUnique({ where: { email: dto.email } }); if (userExists) { throw new ForbiddenException('User already exists'); }
+        const userExists = await this.prisma.user.findUnique({
+            where: { email: dto.email }
+        });
+        if (userExists) {
+            throw new ForbiddenException('User already exists');
+        }
 
         const hash = await bcrypt.hash(dto.password, 10);
 
@@ -25,7 +30,12 @@ import { DatabaseService } from 'src/database/database.service';
     }
 
     async login(dto: AuthDto) {
-        const user = await this.prisma.user.findUnique({ where: { email: dto.email } }); if (!user || !(await bcrypt.compare(dto.password, user.password))) { throw new ForbiddenException('Invalid credentials'); }
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email }
+        });
+        if (!user || !(await bcrypt.compare(dto.password, user.password))) {
+            throw new ForbiddenException('Invalid credentials');
+        }
 
         const tokens = await this.generateTokens(user.id, user.username, user.email);
         return {
