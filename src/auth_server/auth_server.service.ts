@@ -6,7 +6,6 @@ import { DatabaseService } from 'src/database/database.service';
 
 @Injectable() export class AuthService {
     constructor(private readonly prisma: DatabaseService, private readonly jwtService: JwtService,) { }
-
     async signup(dto: AuthDto) {
         const userExists = await this.prisma.user.findUnique({ where: { email: dto.email } }); if (userExists) { throw new ForbiddenException('User already exists'); }
 
@@ -19,12 +18,10 @@ import { DatabaseService } from 'src/database/database.service';
                 password: hash,
             },
         });
-
         return {
             message: 'Signup successful',
             userId: user.id,
         };
-
     }
 
     async login(dto: AuthDto) {
@@ -36,9 +33,7 @@ import { DatabaseService } from 'src/database/database.service';
             userId: user.id,
             ...tokens,
         };
-
     }
-
     private async generateTokens(userId: number, username: string, email: string) {
         const payload = { sub: userId, username, email };
         const [accessToken, refreshToken] = await Promise.all([
